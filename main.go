@@ -17,9 +17,9 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(monitor.RequestMonitor())
-	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	router.Use(monitor.RequestMonitor()) // request生命周期加入监控数据上报
 	router.GET("/hello", helloHandler)
+	router.GET("/metrics", gin.WrapH(promhttp.Handler())) // 调用gather，展示数据
 
 	var f http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(time.Duration(rand.Intn(3000)) * time.Millisecond)

@@ -23,10 +23,12 @@ func RequestMonitor() gin.HandlerFunc {
 		latency := endTime.Sub(startTime)
 
 		ObserveHistogramExample(float64(latency/time.Millisecond), c.Request.URL.Path, strconv.Itoa((c.Writer.Status())))
-		ObserveSummaryExample(float64(latency.Microseconds()), c.Request.URL.Path, strconv.Itoa((c.Writer.Status())))
+		ObserveSummaryExample(float64(latency), c.Request.URL.Path, strconv.Itoa((c.Writer.Status())))
 
 		fmt.Printf("Request Method: %s, Path: %s, Status: %d, Latency: %f\n",
 			c.Request.Method, c.Request.URL.Path, c.Writer.Status(), float64(latency)/1000000)
+
+		c.Next()
 	}
 }
 
